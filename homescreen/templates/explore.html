@@ -1,0 +1,140 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{% static 'homescreen/theme.css' %}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore · OSSD Guide</title>
+
+<div class=headernav>
+<a href="../../" class=site-title><b>OSSD</b>Guide</a>
+<a href="../../explore">Explore</a>
+<a class="grade-link" href="../../explore?grade=1">Grade 9 Courses</a>
+<a class="grade-link" href="../../explore?grade=2">Grade 10 Courses</a>
+<a class="grade-link" href="../../explore?grade=3">Grade 11 Courses</a>
+<a class="grade-link" href="../../explore?grade=4">Grade 12 Courses</a>
+<a href="../../contact">Contact</a>
+</div>
+</head>
+<body>
+<div class="desc-box">
+  <form method="get" action="">
+    Search:
+    <input type="text" id="search_input" name="search" onchange="this.form.submit()" maxlength="32" value="{{search}}" placeholder="Ex. ENG4U, English...">
+    <button type=submit class=search-btn style="background-color:#404040;">_</button>
+    <br>
+    Grades:
+    {% for num in gradelist %}
+    <input type="checkbox" name="grade" id="grade{{forloop.counter}}" value={{forloop.counter}} onchange="this.form.submit()"
+      {% if num %}
+        checked
+      {% endif %}
+      >
+      <label for=grade>{{forloop.counter|add:8}}</label>
+    {% endfor %}
+      <input type="radio" id="grade_all" onchange="this.form.submit()"
+    {% if grade_checked_all %}
+       checked
+    {% else %}
+      name="grade" value="1234"
+    {% endif %}
+    >
+    <label for="grade_all">All</label><br>
+
+    Levels:
+  {% for level, value in level_checked_list.items %}
+    <input type="checkbox" name="level" id="level{{forloop.counter}}" value={{level_to_char|get_item:level}} onchange="this.form.submit()"
+      {% if value %}
+        checked
+      {% endif %}
+      >
+      <label for=level>{{level}}</label>
+    {% endfor %}
+      <input type="radio" id="level_all" onchange="this.form.submit()"
+    {% if level_checked_all %}
+       checked
+    {% else %}
+      name="level" value="WPDUMCEO"
+    {% endif %}
+    >
+    <label for="level_all">All</label><br>
+
+    Categories:
+    <select name=category id=category_select onchange="this.form.submit()">
+      {% for category in categories %}
+      <option value="{{category}}"
+      {% if category_filter == category %}
+      selected
+      {% endif %}
+        >{{category}}</option>
+      {% endfor %}
+    </select><br>
+
+    Sort by:
+      {% for param in params %}
+      <input type="radio" name=sortby id="sortby" onchange="this.form.submit()" value="{{param}}"
+      {% if sortby == param %}
+        checked
+      {% endif %}
+      >
+      <label for=sortby>{{param|format}}</label>
+      {% endfor %}
+
+      <input type="checkbox" name=rev id="reverse" onchange="this.form.submit()"
+      {% if rev == "1" %}
+      value="0" checked
+      {% else %}
+      value="1"
+      {% endif %}
+      >
+
+      <label for=rev>Descending?</label>
+  </form>
+</div>
+<div class=midcontain>
+<table>
+{% if courseslist%}
+  {% for x in courseslist %}
+  <tr>
+  {% with score=x.course_code|get_score %}
+    <td>{{ x.course_code }}</td> <td><a href="/course/{{ x.course_code }}/">{{ x.course_name }}</a>
+    {% if x.deprecated %}<em>(deprecated)</em> {% endif %}</td> 
+    <td>{% if score != None %}<span class=emph>{{score}} <small>from {{x|get_ratings}} ratings</small></span>{% endif %}</td>
+  {% endwith %}
+</tr>
+  {% endfor %}
+  {% else %}
+    No courses found with those parameters! <em><a href=/explore>Reset all filters</a>?</em>
+{% endif %}
+</table>
+</div>
+<div class=footernav>
+<div class=midfooter>
+<div class=column>
+<a href="/../../explore"><span class=footerhead>COURSES</span></a><br>
+<a href="../../explore?grade=1">Grade 9</a><br>
+<a href="../../explore?grade=2">Grade 10</a><br>
+<a href="../../explore?grade=3">Grade 11</a><br>
+<a href="../../explore?grade=4">Grade 12</a><br>
+<a href="../../explore?level=O">Open-level</a><br>
+
+</div>
+<div class=column>
+  <a href="../../explore?level=D">Academic-level</a><br>
+  <a href="../../explore?level=P">Applied-level</a><br>
+  <a href="../../explore?level=U">University-level</a><br>
+  <a href="../../explore?level=C">College-level</a><br>
+  <a href="../../explore?level=M">Mixed-level</a><br>
+</div>
+<div class=column>
+  <span class=footerhead>SITE</span><br>
+  <a href="../../">Home</a><br>
+  <a href="../../contact">Contact</a><br>
+  <a href="https://github.com/shaan-s">Github</a><br>
+</div>
+<div style="text-align:right;">2024&nbsp;·&nbsp;<a href="https://www.ceruleanechoes.com">ceruleanechoes.com</a>&nbsp;✧
+</div></div>
+</body>
+</html>

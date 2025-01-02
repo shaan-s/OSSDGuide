@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <link rel="stylesheet" href="{% static 'homescreen/theme.css' %}">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact · OSSD Guide</title>
+  <div class=headernav>
+<a href="../../" class=site-title><b>OSSD</b>Guide</a>
+<a href="../../explore">Explore</a>
+<a class="grade-link" href="../../explore?grade=1">Grade 9 Courses</a>
+<a class="grade-link" href="../../explore?grade=2">Grade 10 Courses</a>
+<a class="grade-link" href="../../explore?grade=3">Grade 11 Courses</a>
+<a class="grade-link" href="../../explore?grade=4">Grade 12 Courses</a>
+<a href="../../contact">Contact</a>
+</div>
+
+</head>
+<body>
+  <div class=spcr></div>
+  <div class=midcontain>
+  <div class=headbox>
+    <p class=home>Need <span class=emph>help</span> with Ontario course selection?</p>
+    <div class=spcr></div>
+    <div class=desc-box>
+      <h2>Explore <a href=/explore class=emph>{{course_len}}</a> Courses...</h2>
+      <hr>
+      <form method=get action="../../explore" style="display:inline;">
+        <input class=homesearch type=text placeholder="Search..." name=search maxlength="32"></input>
+        <button type=submit class=search-btn id=homebtn>_</button>
+      </form>
+      <h2 style="text-align:right;">...Including <span class=emph>{{ratings_len}}</span> Ratings and Reviews</h2>
+    </div>
+    <div class=spcr></div>
+    <p class=home>Find the <span class=emph>right</span> course for you!</p>
+    </div>
+    </div>
+    <div class=footernav>
+    <div class=midfooter>
+    <div class=column>
+    <a href="/../../explore"><span class=footerhead>COURSES</span></a><br>
+    <a href="../../explore?grade=1">Grade 9</a><br>
+    <a href="../../explore?grade=2">Grade 10</a><br>
+    <a href="../../explore?grade=3">Grade 11</a><br>
+    <a href="../../explore?grade=4">Grade 12</a><br>
+    <a href="../../explore?level=O">Open-level</a><br>
+
+    </div>
+    <div class=column>
+      <a href="../../explore?level=D">Academic-level</a><br>
+      <a href="../../explore?level=P">Applied-level</a><br>
+      <a href="../../explore?level=U">University-level</a><br>
+      <a href="../../explore?level=C">College-level</a><br>
+      <a href="../../explore?level=M">Mixed-level</a><br>
+    </div>
+    <div class=column>
+      <span class=footerhead>SITE</span><br>
+      <a href="../../">Home</a><br>
+      <a href="../../contact">Contact</a><br>
+      <a href="https://github.com/shaan-s">Github</a><br>
+    </div>
+    <div style="text-align:right;">2024&nbsp;·&nbsp;<a href="https://www.ceruleanechoes.com">ceruleanechoes.com</a>&nbsp;✧
+    </div></div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="{% static 'homescreen/theme.css' %}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{curr_course.course_code}} · OSSD Guide</title>
+
+    <div class=headernav>
+  <a href="../../" class=site-title><b>OSSD</b>Guide</a>
+  <a href="../../explore">Explore</a>
+  <a class="grade-link" href="../../explore?grade=1">Grade 9 Courses</a>
+  <a class="grade-link" href="../../explore?grade=2">Grade 10 Courses</a>
+  <a class="grade-link" href="../../explore?grade=3">Grade 11 Courses</a>
+  <a class="grade-link" href="../../explore?grade=4">Grade 12 Courses</a>
+  <a href="../../contact">Contact</a>
+  <form method=get action="../../explore" style="display:inline;">
+    <input type=text placeholder="Search..." name=search maxlength="32"></input>
+    <button type=submit class=search-btn>_</button>
+  </form>
+</div>
+  </head>
+
+  <body>
+    <div class=midcontain>
+    <div class=headbox>
+      <div class="ratingbox">
+      {% if num_ratings > 0 %}
+      <div class=sub-rating-box>
+      <b>Overall rating</b>: <span class=ratenum>{{ overall_mean }}</span> / 5.0
+      <div class=stars>
+      {% for i in '01234'|make_list %}
+
+  <div class=star-wrap id=overall-star-wrap>
+  <div class=star-inner style="--starval:{{overall_mean|percentformat:i}}%;">
+  </div>
+   </div>
+   {% endfor %}
+    </div>
+    <em id=numreviewtext>⟶ from <a href="#reviews">{{ num_ratings }} rating{{ num_ratings|s}}</a></em>
+  </div>
+  <div class=sub-rating-box>
+      <b>Interesting</b>: <span class=ratenum>{{ interesting_mean }}</span> / 5.0
+
+      <div class=stars>
+
+      {% for i in '01234'|make_list %}
+
+  <div class=star-wrap>
+  <div class=star-inner style="--starval:{{interesting_mean|percentformat:i}}%">
+  </div>
+   </div>
+   {% endfor %}
+    </div>
+      <b>Easy</b>: <span class=ratenum>{{easy_mean}}</span> / 5.0
+      <div class=stars>
+      {% for i in '01234'|make_list %}
+
+  <div class=star-wrap>
+  <div class=star-inner style="--starval:{{easy_mean|percentformat:i}}%">
+  </div>
+   </div>
+   {% endfor %}
+    </div>
+    <em id=numreviewtext-mobile>⟶ from <a href="#reviews">{{ num_ratings }} rating{{ num_ratings|s}}</a></em>
+      </div>
+      {% else %}
+      <em>No ratings yet! Be the first to <a href="#addreview">add one</a>!</em>
+      {% endif %}
+      </div>
+    <h1>{{curr_course.course_code}}</h1> <hr>
+    <h2><a href="../../explore?level={{url_level_val}}">{{level_val}}</a> <a title="See similar courses" href=../../explore?search={{curr_course.course_name|cut:"The "|cut:"Introduction to "|cut:"Studies in "}}>{{curr_course.course_name}}</a>{% if grade_val %}, <a href="../../explore?grade={{url_grade_val}}">Grade {{grade_val}}
+{% endif %}
+</a></h2>
+  </div>
+  {% if curr_course.deprecated %}
+  <div class="desc-box deprecated"><p><b>Note:</b> <em>This course is deprecated!</em> This means it is no longer offered as of the <a href=https://www.dcp.edu.gov.on.ca/en/>last Ontario curriculum</a>. See below for more information.</p></div>
+  {% endif %}
+    <div class=desc-box><p><b>Course description:</b> {{curr_course.description}} (category: <a href="../../explore?category={{curr_course.category}}">{{curr_course.category}}</a>)
+</p>
+<p><b>Pre-requisite courses:</b>
+{% if len_first_prereq == 5 %}
+  {% for course in prereq_list %}
+    {% if course == last_prereq %}
+      <a href="../{{course}}">{{ course }}</a>
+    {% else %}
+      <a href="../{{course}}">{{ course }}</a> ·
+    {% endif %}
+  {% endfor %}
+  {% else %}
+   {{curr_course.prereq}}
+{% endif %}
+</p>
+{% if leads_to %}
+  <p><b>Required for:</b>
+  {% for course in leads_to %}
+    {% if course == last_leads_to %}
+      <a href="../{{course}}">{{ course }}</a>
+    {% else %}
+      <a href="../{{course}}">{{ course }}</a> ·
+    {% endif %}
+  {% endfor %}
+{% endif %}
+</p>
+</div>
+
+{% if num_ratings > 0 %}
+<div id=reviews>
+  {% for review in course_reviews %}
+  <p>
+    <div class=stars>
+    {% for i in '01234'|make_list %}
+
+<div class=star-wrap>
+<div class=star-inner style="--starval:{{review.overall_rating|percentformat:i}}%">
+</div>
+ </div>
+ {% endfor %}
+  </div>
+   Interesting: {{ review.interesting_rating }} / 5,
+   Easy: {{ review.easy_rating }} / 5,
+   Overall: {{ review.overall_rating }} / 5 <br>
+   {{ review.review_text }}<br>
+
+    {% if review.online %}
+      <em>Course taken online by a {{ review.user_school_board }} student.</em>
+    {% else %}
+     <em>Course taken in-person by a {{ review.user_school_board }} student.</em>
+    {% endif %}
+    <hr>
+  </p>
+  {% endfor %}
+</div>
+{% else %}
+{% endif %}
+
+<div class=spcr></div>
+<h2>Add your thoughts!</h2>
+  <form action="" method="post">
+    <div class="desc-box" id="addreview">
+      {% csrf_token %}
+      {{ form }}
+      <hr>
+      <b>Review guidelines:</b> Reviews should be about the <u>course's content and cirriculum</u>, not teacher or school-specific comments. Please do not make mention of any names, teachers, or schools. Reviews cannot exceed 1,000 characters and should only be written using ASCII characters. <!--All reviews are moderated before being added to the site.--> Spam, nonsense, or vulgar reviews will be removed.
+      <hr>
+      <input type="submit" value="Submit">
+      </div>
+  </form>
+  </div>
+
+<div class=footernav>
+<div class=midfooter>
+<div class=column>
+<a href="/../../explore"><span class=footerhead>COURSES</span></a><br>
+<a href="../../explore?grade=1">Grade 9</a><br>
+<a href="../../explore?grade=2">Grade 10</a><br>
+<a href="../../explore?grade=3">Grade 11</a><br>
+<a href="../../explore?grade=4">Grade 12</a><br>
+<a href="../../explore?level=O">Open-level</a><br>
+
+</div>
+<div class=column>
+  <a href="../../explore?level=D">Academic-level</a><br>
+  <a href="../../explore?level=P">Applied-level</a><br>
+  <a href="../../explore?level=U">University-level</a><br>
+  <a href="../../explore?level=C">College-level</a><br>
+  <a href="../../explore?level=M">Mixed-level</a><br>
+</div>
+<div class=column>
+  <span class=footerhead>SITE</span><br>
+  <a href="../../">Home</a><br>
+  <a href="../../contact">Contact</a><br>
+  <a href="https://github.com/shaan-s">Github</a><br>
+</div>
+<div style="text-align:right;">2024&nbsp;·&nbsp;<a href="https://www.ceruleanechoes.com">ceruleanechoes.com</a>&nbsp;✧
+</div></div>
+
+</div>
+  </body>
+</html>
